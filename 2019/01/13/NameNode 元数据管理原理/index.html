@@ -6,18 +6,22 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="https://alexblog.site">
-  <title>Archives: 2021/4 | Alex&#39;s blog</title>
+  <title>NameNode 如何管理元数据 | Alex&#39;s blog</title>
   <meta name="generator" content="hexo-theme-yilia-plus">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   
-  <meta name="description" content="codeing">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Alex&#39;s blog">
-<meta property="og:url" content="https://alexblog.site/archives/2021/04/index.html">
+  <meta name="description" content="元数据是 Hadoop 集群非常重要的信息，它记录着 HDFS 中所有文件块的信息，如果丢失，整个集群将无法正常工作。NameNode 作为管理元数据信息的节点，不仅要保证元数据不会丢失，还要为客户端提供高效率的访问机制。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="NameNode 如何管理元数据">
+<meta property="og:url" content="https://alexblog.site/2019/01/13/NameNode%20%E5%85%83%E6%95%B0%E6%8D%AE%E7%AE%A1%E7%90%86%E5%8E%9F%E7%90%86/index.html">
 <meta property="og:site_name" content="Alex&#39;s blog">
-<meta property="og:description" content="codeing">
+<meta property="og:description" content="元数据是 Hadoop 集群非常重要的信息，它记录着 HDFS 中所有文件块的信息，如果丢失，整个集群将无法正常工作。NameNode 作为管理元数据信息的节点，不仅要保证元数据不会丢失，还要为客户端提供高效率的访问机制。">
 <meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2019-01-13T13:16:11.000Z">
+<meta property="article:modified_time" content="2021-04-06T12:32:59.111Z">
 <meta property="article:author" content="Alex">
+<meta property="article:tag" content="大数据">
+<meta property="article:tag" content="Hadoop">
 <meta name="twitter:card" content="summary">
   
   
@@ -95,189 +99,18 @@
 			<div class="social">
 				
 					
-						<a class="0" href="/h" 
-												title="subNav.title.0" target="_blank"><i class="icon-0"></i></a>
-					
-						<a class="1" href="/t" 
-												title="subNav.title.1" target="_blank"><i class="icon-1"></i></a>
-					
-						<a class="2" href="/t" 
-												title="subNav.title.2" target="_blank"><i class="icon-2"></i></a>
-					
-						<a class="3" href="/p" 
-												title="subNav.title.3" target="_blank"><i class="icon-3"></i></a>
-					
-						<a class="4" href="/s" 
-												title="subNav.title.4" target="_blank"><i class="icon-4"></i></a>
-					
-						<a class="5" href="/:" 
-												title="subNav.title.5" target="_blank"><i class="icon-5"></i></a>
-					
-						<a class="6" href="/" 
-												title="subNav.title.6" target="_blank"><i class="icon-6"></i></a>
-					
-						<a class="7" href="/" 
-												title="subNav.title.7" target="_blank"><i class="icon-7"></i></a>
-					
-						<a class="8" href="/g" 
-												title="subNav.title.8" target="_blank"><i class="icon-8"></i></a>
-					
-						<a class="9" href="/i" 
-												title="subNav.title.9" target="_blank"><i class="icon-9"></i></a>
-					
-						<a class="10" href="/t" 
-												title="subNav.title.10" target="_blank"><i class="icon-10"></i></a>
-					
-						<a class="11" href="/h" 
-												title="subNav.title.11" target="_blank"><i class="icon-11"></i></a>
-					
-						<a class="12" href="/u" 
-												title="subNav.title.12" target="_blank"><i class="icon-12"></i></a>
-					
-						<a class="13" href="/b" 
-												title="subNav.title.13" target="_blank"><i class="icon-13"></i></a>
-					
-						<a class="14" href="/." 
-												title="subNav.title.14" target="_blank"><i class="icon-14"></i></a>
-					
-						<a class="15" href="/c" 
-												title="subNav.title.15" target="_blank"><i class="icon-15"></i></a>
-					
-						<a class="16" href="/o" 
-												title="subNav.title.16" target="_blank"><i class="icon-16"></i></a>
-					
-						<a class="17" href="/m" 
-												title="subNav.title.17" target="_blank"><i class="icon-17"></i></a>
-					
-						<a class="18" href="/" 
-												title="subNav.title.18" target="_blank"><i class="icon-18"></i></a>
-					
-						<a class="19" href="/w" 
-												title="subNav.title.19" target="_blank"><i class="icon-19"></i></a>
-					
-						<a class="20" href="/w" 
-												title="subNav.title.20" target="_blank"><i class="icon-20"></i></a>
-					
-						<a class="21" href="/j" 
-												title="subNav.title.21" target="_blank"><i class="icon-21"></i></a>
-					
-						<a class="22" href="/w" 
-												title="subNav.title.22" target="_blank"><i class="icon-22"></i></a>
-					
-						<a class="23" href="/e" 
-												title="subNav.title.23" target="_blank"><i class="icon-23"></i></a>
-					
-						<a class="24" href="/i" 
-												title="subNav.title.24" target="_blank"><i class="icon-24"></i></a>
-					
-						<a class="25" href="/j" 
-												title="subNav.title.25" target="_blank"><i class="icon-25"></i></a>
-					
-						<a class="26" href="/i" 
-												title="subNav.title.26" target="_blank"><i class="icon-26"></i></a>
-					
-						<a class="27" href="/e" 
-												title="subNav.title.27" target="_blank"><i class="icon-27"></i></a>
+						<a class="github" href="https://github.com/wwjweijie" 
+												title="GitHub" target="_blank"><i class="icon-github"></i></a>
 					
 				
 					
-						<a class="0" href="/" 
-												title="subNav.title.0" target="_blank"><i class="icon-0"></i></a>
-					
-						<a class="1" href="/i" 
-												title="subNav.title.1" target="_blank"><i class="icon-1"></i></a>
-					
-						<a class="2" href="/m" 
-												title="subNav.title.2" target="_blank"><i class="icon-2"></i></a>
-					
-						<a class="3" href="/g" 
-												title="subNav.title.3" target="_blank"><i class="icon-3"></i></a>
-					
-						<a class="4" href="/" 
-												title="subNav.title.4" target="_blank"><i class="icon-4"></i></a>
-					
-						<a class="5" href="/w" 
-												title="subNav.title.5" target="_blank"><i class="icon-5"></i></a>
-					
-						<a class="6" href="/e" 
-												title="subNav.title.6" target="_blank"><i class="icon-6"></i></a>
-					
-						<a class="7" href="/c" 
-												title="subNav.title.7" target="_blank"><i class="icon-7"></i></a>
-					
-						<a class="8" href="/h" 
-												title="subNav.title.8" target="_blank"><i class="icon-8"></i></a>
-					
-						<a class="9" href="/a" 
-												title="subNav.title.9" target="_blank"><i class="icon-9"></i></a>
-					
-						<a class="10" href="/t" 
-												title="subNav.title.10" target="_blank"><i class="icon-10"></i></a>
-					
-						<a class="11" href="/." 
-												title="subNav.title.11" target="_blank"><i class="icon-11"></i></a>
-					
-						<a class="12" href="/j" 
-												title="subNav.title.12" target="_blank"><i class="icon-12"></i></a>
-					
-						<a class="13" href="/p" 
-												title="subNav.title.13" target="_blank"><i class="icon-13"></i></a>
-					
-						<a class="14" href="/e" 
-												title="subNav.title.14" target="_blank"><i class="icon-14"></i></a>
-					
-						<a class="15" href="/g" 
-												title="subNav.title.15" target="_blank"><i class="icon-15"></i></a>
+						<a class="weixin" href="/img/wechat.jpeg" 
+												title="微信" target="_blank"><i class="icon-weixin"></i></a>
 					
 				
 					
-						<a class="0" href="/4" 
-												title="subNav.title.0" target="_blank"><i class="icon-0"></i></a>
-					
-						<a class="1" href="/9" 
-												title="subNav.title.1" target="_blank"><i class="icon-1"></i></a>
-					
-						<a class="2" href="/6" 
-												title="subNav.title.2" target="_blank"><i class="icon-2"></i></a>
-					
-						<a class="3" href="/8" 
-												title="subNav.title.3" target="_blank"><i class="icon-3"></i></a>
-					
-						<a class="4" href="/9" 
-												title="subNav.title.4" target="_blank"><i class="icon-4"></i></a>
-					
-						<a class="5" href="/8" 
-												title="subNav.title.5" target="_blank"><i class="icon-5"></i></a>
-					
-						<a class="6" href="/2" 
-												title="subNav.title.6" target="_blank"><i class="icon-6"></i></a>
-					
-						<a class="7" href="/4" 
-												title="subNav.title.7" target="_blank"><i class="icon-7"></i></a>
-					
-						<a class="8" href="/0" 
-												title="subNav.title.8" target="_blank"><i class="icon-8"></i></a>
-					
-						<a class="9" href="/@" 
-												title="subNav.title.9" target="_blank"><i class="icon-9"></i></a>
-					
-						<a class="10" href="/q" 
-												title="subNav.title.10" target="_blank"><i class="icon-10"></i></a>
-					
-						<a class="11" href="/q" 
-												title="subNav.title.11" target="_blank"><i class="icon-11"></i></a>
-					
-						<a class="12" href="/." 
-												title="subNav.title.12" target="_blank"><i class="icon-12"></i></a>
-					
-						<a class="13" href="/c" 
-												title="subNav.title.13" target="_blank"><i class="icon-13"></i></a>
-					
-						<a class="14" href="/o" 
-												title="subNav.title.14" target="_blank"><i class="icon-14"></i></a>
-					
-						<a class="15" href="/m" 
-												title="subNav.title.15" target="_blank"><i class="icon-15"></i></a>
+						<a class="mail" href="/496898240@qq.com" 
+												title="邮件联系" target="_blank"><i class="icon-mail"></i></a>
 					
 				
 			</div>
@@ -288,12 +121,6 @@
 
     </div>
     <div class="mid-col" q-class="show:isShow,hide:isShow|isFalse">
-      
-      
-      <a class="forkMe" style="position:absolute;z-index:999;top:0;right:0.5em;" 
-        href="https://github.com/JoeyBling/hexo-theme-yilia-plus" target="_blank">
-        <img src="/img/forkme.png"
-          class="attachment-full size-full" alt="Fork me on GitHub" data-recalc-dims="1"></a>
       
       
 <nav id="mobile-nav">
@@ -324,189 +151,18 @@
 				<div class="social">
 					
 						
-						<a class="0" target="_blank" 
-							href="/h" title="subNav.title.0"><i class="icon-0"></i></a>
-						
-						<a class="1" target="_blank" 
-							href="/t" title="subNav.title.1"><i class="icon-1"></i></a>
-						
-						<a class="2" target="_blank" 
-							href="/t" title="subNav.title.2"><i class="icon-2"></i></a>
-						
-						<a class="3" target="_blank" 
-							href="/p" title="subNav.title.3"><i class="icon-3"></i></a>
-						
-						<a class="4" target="_blank" 
-							href="/s" title="subNav.title.4"><i class="icon-4"></i></a>
-						
-						<a class="5" target="_blank" 
-							href="/:" title="subNav.title.5"><i class="icon-5"></i></a>
-						
-						<a class="6" target="_blank" 
-							href="/" title="subNav.title.6"><i class="icon-6"></i></a>
-						
-						<a class="7" target="_blank" 
-							href="/" title="subNav.title.7"><i class="icon-7"></i></a>
-						
-						<a class="8" target="_blank" 
-							href="/g" title="subNav.title.8"><i class="icon-8"></i></a>
-						
-						<a class="9" target="_blank" 
-							href="/i" title="subNav.title.9"><i class="icon-9"></i></a>
-						
-						<a class="10" target="_blank" 
-							href="/t" title="subNav.title.10"><i class="icon-10"></i></a>
-						
-						<a class="11" target="_blank" 
-							href="/h" title="subNav.title.11"><i class="icon-11"></i></a>
-						
-						<a class="12" target="_blank" 
-							href="/u" title="subNav.title.12"><i class="icon-12"></i></a>
-						
-						<a class="13" target="_blank" 
-							href="/b" title="subNav.title.13"><i class="icon-13"></i></a>
-						
-						<a class="14" target="_blank" 
-							href="/." title="subNav.title.14"><i class="icon-14"></i></a>
-						
-						<a class="15" target="_blank" 
-							href="/c" title="subNav.title.15"><i class="icon-15"></i></a>
-						
-						<a class="16" target="_blank" 
-							href="/o" title="subNav.title.16"><i class="icon-16"></i></a>
-						
-						<a class="17" target="_blank" 
-							href="/m" title="subNav.title.17"><i class="icon-17"></i></a>
-						
-						<a class="18" target="_blank" 
-							href="/" title="subNav.title.18"><i class="icon-18"></i></a>
-						
-						<a class="19" target="_blank" 
-							href="/w" title="subNav.title.19"><i class="icon-19"></i></a>
-						
-						<a class="20" target="_blank" 
-							href="/w" title="subNav.title.20"><i class="icon-20"></i></a>
-						
-						<a class="21" target="_blank" 
-							href="/j" title="subNav.title.21"><i class="icon-21"></i></a>
-						
-						<a class="22" target="_blank" 
-							href="/w" title="subNav.title.22"><i class="icon-22"></i></a>
-						
-						<a class="23" target="_blank" 
-							href="/e" title="subNav.title.23"><i class="icon-23"></i></a>
-						
-						<a class="24" target="_blank" 
-							href="/i" title="subNav.title.24"><i class="icon-24"></i></a>
-						
-						<a class="25" target="_blank" 
-							href="/j" title="subNav.title.25"><i class="icon-25"></i></a>
-						
-						<a class="26" target="_blank" 
-							href="/i" title="subNav.title.26"><i class="icon-26"></i></a>
-						
-						<a class="27" target="_blank" 
-							href="/e" title="subNav.title.27"><i class="icon-27"></i></a>
+						<a class="github" target="_blank" 
+							href="https://github.com/wwjweijie" title="GitHub"><i class="icon-github"></i></a>
 						
 					
 						
-						<a class="0" target="_blank" 
-							href="/" title="subNav.title.0"><i class="icon-0"></i></a>
-						
-						<a class="1" target="_blank" 
-							href="/i" title="subNav.title.1"><i class="icon-1"></i></a>
-						
-						<a class="2" target="_blank" 
-							href="/m" title="subNav.title.2"><i class="icon-2"></i></a>
-						
-						<a class="3" target="_blank" 
-							href="/g" title="subNav.title.3"><i class="icon-3"></i></a>
-						
-						<a class="4" target="_blank" 
-							href="/" title="subNav.title.4"><i class="icon-4"></i></a>
-						
-						<a class="5" target="_blank" 
-							href="/w" title="subNav.title.5"><i class="icon-5"></i></a>
-						
-						<a class="6" target="_blank" 
-							href="/e" title="subNav.title.6"><i class="icon-6"></i></a>
-						
-						<a class="7" target="_blank" 
-							href="/c" title="subNav.title.7"><i class="icon-7"></i></a>
-						
-						<a class="8" target="_blank" 
-							href="/h" title="subNav.title.8"><i class="icon-8"></i></a>
-						
-						<a class="9" target="_blank" 
-							href="/a" title="subNav.title.9"><i class="icon-9"></i></a>
-						
-						<a class="10" target="_blank" 
-							href="/t" title="subNav.title.10"><i class="icon-10"></i></a>
-						
-						<a class="11" target="_blank" 
-							href="/." title="subNav.title.11"><i class="icon-11"></i></a>
-						
-						<a class="12" target="_blank" 
-							href="/j" title="subNav.title.12"><i class="icon-12"></i></a>
-						
-						<a class="13" target="_blank" 
-							href="/p" title="subNav.title.13"><i class="icon-13"></i></a>
-						
-						<a class="14" target="_blank" 
-							href="/e" title="subNav.title.14"><i class="icon-14"></i></a>
-						
-						<a class="15" target="_blank" 
-							href="/g" title="subNav.title.15"><i class="icon-15"></i></a>
+						<a class="weixin" target="_blank" 
+							href="/img/wechat.jpeg" title="微信"><i class="icon-weixin"></i></a>
 						
 					
 						
-						<a class="0" target="_blank" 
-							href="/4" title="subNav.title.0"><i class="icon-0"></i></a>
-						
-						<a class="1" target="_blank" 
-							href="/9" title="subNav.title.1"><i class="icon-1"></i></a>
-						
-						<a class="2" target="_blank" 
-							href="/6" title="subNav.title.2"><i class="icon-2"></i></a>
-						
-						<a class="3" target="_blank" 
-							href="/8" title="subNav.title.3"><i class="icon-3"></i></a>
-						
-						<a class="4" target="_blank" 
-							href="/9" title="subNav.title.4"><i class="icon-4"></i></a>
-						
-						<a class="5" target="_blank" 
-							href="/8" title="subNav.title.5"><i class="icon-5"></i></a>
-						
-						<a class="6" target="_blank" 
-							href="/2" title="subNav.title.6"><i class="icon-6"></i></a>
-						
-						<a class="7" target="_blank" 
-							href="/4" title="subNav.title.7"><i class="icon-7"></i></a>
-						
-						<a class="8" target="_blank" 
-							href="/0" title="subNav.title.8"><i class="icon-8"></i></a>
-						
-						<a class="9" target="_blank" 
-							href="/@" title="subNav.title.9"><i class="icon-9"></i></a>
-						
-						<a class="10" target="_blank" 
-							href="/q" title="subNav.title.10"><i class="icon-10"></i></a>
-						
-						<a class="11" target="_blank" 
-							href="/q" title="subNav.title.11"><i class="icon-11"></i></a>
-						
-						<a class="12" target="_blank" 
-							href="/." title="subNav.title.12"><i class="icon-12"></i></a>
-						
-						<a class="13" target="_blank" 
-							href="/c" title="subNav.title.13"><i class="icon-13"></i></a>
-						
-						<a class="14" target="_blank" 
-							href="/o" title="subNav.title.14"><i class="icon-14"></i></a>
-						
-						<a class="15" target="_blank" 
-							href="/m" title="subNav.title.15"><i class="icon-15"></i></a>
+						<a class="mail" target="_blank" 
+							href="/496898240@qq.com" title="邮件联系"><i class="icon-mail"></i></a>
 						
 					
 				</div>
@@ -534,54 +190,266 @@
               class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
-  
-  
+            <article id="post-NameNode 元数据管理原理" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
     
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2021" class="archive-year">2021</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	
-<a href="/2021/04/05/hello-world/" class="archive-article-date">
-        <time datetime="2021-04-05T15:55:12.943Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-04-05</time>
-</a>
-
-        </div>
-    	 
+      <header class="article-header">
   
-    <h1 itemprop="name">
-	
-	  <a class="archive-article-title" href="/2021/04/05/hello-world/" target="_blank">Hello World</a>
   
+    <h1 class="article-title" itemprop="name">
+      NameNode 如何管理元数据
     </h1>
   
 
 
-        <div class="article-info info-on-right">
-          
-          
+  
+  
+        
+        <span id="busuanzi_container_page_pv" style='display:none' class="archive-article-date">
+              <i class="icon-smile icon"></i> 阅读数：<span id="busuanzi_value_page_pv"></span>次
+        </span>
 
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
+<a href="/2019/01/13/NameNode%20%E5%85%83%E6%95%B0%E6%8D%AE%E7%AE%A1%E7%90%86%E5%8E%9F%E7%90%86/" class="archive-article-date">
+        <time datetime="2019-01-13T13:16:11.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-01-13</time>
+</a>
+
   
   
-    </div></section>
+    
+<div style="margin-top:10px;">
+  <span class="post-time">
+    <span class="post-meta-item-icon">
+      <!-- fonts.scss -->
+      <!-- 百度字体平台:http://fontstore.baidu.com/static/editor/index.html -->
+      <i class="icon-statistics"></i>
+      <span class="post-meta-item-text"> 字数统计:</span>
+      <span class="post-count">490字</span>
+    </span>
+  </span>
+
+  <span class="post-time">
+    &nbsp; | &nbsp;
+    <span class="post-meta-item-icon">
+      <i class="icon-book icon"></i>
+      <span class="post-meta-item-text"> 阅读时长≈</span>
+      <span class="post-count">1分</span>
+    </span>
+  </span>
+</div>
+
+
   
+  </header>
+  
+  <div class="article-entry" itemprop="articleBody">
+    
+    <p>元数据是 Hadoop 集群非常重要的信息，它记录着 HDFS 中所有文件块的信息，如果丢失，整个集群将无法正常工作。NameNode 作为管理元数据信息的节点，不仅要保证元数据不会丢失，还要为客户端提供高效率的访问机制。</p>
+<span id="more"></span>
+
+<p>仅通过磁盘读取元数据效率会很低，因为磁盘检索文件的速度不理想；仅通过内存读取元数据又有很大的风险性，只要一断电，数据完全消失，所以 NameNode 是通过一种磁盘加内存并行的方式，来管理元数据信息的。</p>
+<p>读取文件的时候，NameNode 只需要从元数据中搜索所需要读取的文件存放的 DataNode 信息并返回给客户端，不会涉及到修改元数据的信息，所以，我们需要了解的更多是当客户端申请写入数据到 DataNode 的时候，NameNode 是如何管理元数据的。</p>
+<p>磁盘中会存放一个 fsimage 文件，用来保存原始的元数据信息，NameNode 启动的时候，会从这个文件读取信息到内存中命名为 metedata ，方便集群的快速查找，当客户端申请写入时，NameNode 会将写入文件的元数据信息存放在一个名为 editlog 的临时文件中，当客户端写入成功后，再将刚创建的元数据信息放到 NameNode 的内存中。临时文件有大小限制，当达到一定大小时，NameNode 会通知 SecondaryNameNode 执行 checkpoint 操作，NameNode 将停止往 editlog 中继续写入新增的元数据信息，并重新创建一个新的临时文件用来保存继续追加的元数据信息。SecondaryNameNode 通过 http 从 NameNode 下载 fsimage 文件和旧的 editlog 文件进行合并形成一个新的 fsimage 文件保存到磁盘，并上传给 NameNode 。</p>
 
     
+
+    
+    <div class="page-reward">
+      <a href="javascript:void(0);" class="page-reward-btn tooltip-top" target="_self">
+        <div class="tooltip tooltip-east">
+          <span class="tooltip-item">
+            赏
+          </span>
+          <span class="tooltip-content">
+            <span class="tooltip-text">
+              <span class="tooltip-inner">
+                <p class="reward-p"><i class="icon icon-quo-left"></i>谢谢你请我吃糖果<i
+                    class="icon icon-quo-right"></i></p>
+                <div class="reward-box">
+                  
+                  <div class="reward-box-item">
+                    <img class="reward-img" src="/img/alipay.jpg">
+                    <span class="reward-type">支付宝</span>
+                  </div>
+                  
+                  
+                  <div class="reward-box-item">
+                    <img class="reward-img" src="/img/weixin.png">
+                    <span class="reward-type">微信</span>
+                  </div>
+                  
+                </div>
+              </span>
+            </span>
+          </span>
+        </div>
+      </a>
+    </div>
+    
+
+    
+    <div class="declare"> 
+      <ul class="post-copyright">
+        <li>
+          <strong>本文作者：</strong>
+          Alex
+        </li>
+        <li>
+          <strong>本文链接：</strong>
+          <a href="https://alexblog.site/2019/01/13/NameNode 元数据管理原理/" title="NameNode 如何管理元数据" target="_blank">https://alexblog.site/2019/01/13/NameNode 元数据管理原理/</a>
+        </li>
+        
+        <li>
+          <strong>版权声明： </strong>
+          
+          本博客所有文章除特别声明外，均采用 <a href="https://github.com/JoeyBling/hexo-theme-yilia-plus/blob/master/LICENSE" rel="external nofollow" target="_blank">MIT</a> 许可协议。转载请注明出处！
+        </li>
+        
+      </ul>
+    </div>
+    
+
+  </div>
+  <div class="article-info article-info-index">
+    
+    
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">大数据</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Hadoop</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+    
+
+    
+
+    
+    
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <!-- <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a> -->
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
+        </div>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+     <!-- <img src="//pan.baidu.com/share/qrcode?url=https://alexblog.site/2019/01/13/NameNode%20%E5%85%83%E6%95%B0%E6%8D%AE%E7%AE%A1%E7%90%86%E5%8E%9F%E7%90%86/" alt="微信分享二维码"> -->
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
+
+    
+    <div class="clearfix"></div>
+  </div>
+  </div>
+</article>
+
+
+<nav id="article-nav">
+  
+    <a href="/2019/06/01/SQL%20Server%E8%B8%A9%E5%9D%91%E2%80%94%E2%80%94%E9%9A%8F%E6%9C%BA%E5%8C%B9%E9%85%8D/" id="article-nav-newer" class="article-nav-link-wrap">
+      <i class="icon-circle-left"></i>
+      <div class="article-nav-title">
+        
+          SQL Server踩坑——随机匹配
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2018/11/30/%E5%88%9D%E8%A7%81%E6%B7%B1%E5%9C%B3/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">初见深圳</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+        <div class="toc-container tooltip-left">
+            <i class="icon-font icon-category"></i>
+            <div class="tooltip tooltip-east">
+                <span class="tooltip-item">
+                </span>
+                <span class="tooltip-content">
+                    <div class="toc-article">
+                    博主偷懒了，这篇文章没写目录...
+                    </div>
+                </span>
+            </div>
+        </div>
+        
+    </div>
+</aside>
+
+
+
+
+
+
+
+
+
+
+
+
 
 
           </div>
@@ -622,8 +490,8 @@
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: false,
-		isArchive: true,
+		isPost: true,
+		isArchive: false,
 		isTag: false,
 		isCategory: false,
 		open_in_new: true,
@@ -691,6 +559,34 @@
             <input type="checkbox" q-on="click:toggleTag(e)" q-attr="checked:showTags">
           </label>
           <ul class="article-tag-list" q-show="showTags">
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">记录</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">生活</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">旅游</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">大数据</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Hadoop</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">数据库</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">SQL Server</a>
+              </li>
             
             <div class="clearfix"></div>
           </ul>
